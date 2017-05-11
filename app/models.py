@@ -19,4 +19,18 @@ class Users(Base):
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
 
-    
+    def __repr__(self):
+        return 'username{} email{}'.format(self.user_name,self.email)
+
+
+class Buckectlist(Base):
+    """creates Buckectlist tables"""
+    __tablename__ = "bucketList"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(ForeignKey('user.id'), nullable=False)
+    item = Column(String, nullable=False)
+    created_date = Column(DateTime, nullable=False)
+    user = relationship('Users')
+    modified_date = Column(DateTime, nullable=False)
+
