@@ -24,6 +24,23 @@ var/
 .installed.cfg
 *.egg
 
+# Instance Folder - used for configuration parameters
+/instance/db_create_full.py
+/instance/flask_full.cfg
+/instance/*.db
+
+# PyCharm files
+.idea/
+
+# Mac custom attributes file (Desktop Service Store)
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
