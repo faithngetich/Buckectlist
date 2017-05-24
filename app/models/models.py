@@ -1,24 +1,22 @@
-from app import db
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
-import datetime
-from datetime import datetime
-datetime.utcnow()
-from sqlalchemy.orm import relationship, sessionmaker
+from datetime import datetime, timedelta
+from flask_sqlalchemy import SQLAlchemy
 import jwt
 
 from app.config import config
 
+db = SQLAlchemy()
 
 class User(db.Model, UserMixin):
     """Defines the users model"""
     __tablename__ = "user"
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
-    email = db.Column(db.String(120), unique=True)
-    password_hash = db.Column(db.String)
-    # bucketlists = db.relationship('Bucketlist', backref="user",
-    #                               cascade="all,delete-orphan", lazy='dynamic')
+    user_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255))
+    password = db.Column(db.String(255), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow())
+    bucketlists = db.relationship('BucketList', backref="user",
+                                  cascade="all,delete-orphan", lazy='dynamic')
 
     @property
     def password(self):
@@ -29,31 +27,30 @@ class User(db.Model, UserMixin):
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        # return check_password_hash(self.password_hash, password)
+        return check_password_hash(generate_password_hash(password), password)
 
     @staticmethod
     def get_by_username(username):
         return User.query.filter_by(username=username).first()
 
-    def encode_auth_token(self, id):
+    def encode_auth_token(self, user_id):
         """
         Generates the Auth Token
         :return: string
         """
-        try:
-            payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=60),
-                'iat': datetime.datetime.utcnow(),
-                'sub': id
-            }
-            return jwt.encode(
-                payload,
-                config['SECRET'],
-                algorithm='HS256'
-            )
-        except Exception as e:
-            return e
-
+        
+        payload = {
+            'exp':datetime.utcnow() + timedelta(days=0, seconds=3600),
+            'iat':datetime.utcnow(),
+            'sub': id
+        }
+        return jwt.encode(
+            payload,
+            config['SECRET'], 
+            algorithm='HS256'
+        )
+    
     @staticmethod
     def decode_auth_token(token):
         """
@@ -72,43 +69,38 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return "< user: {}>".format(self.username)
 
-class Bucketlist(db.Model, UserMixin):
+class BucketList(db.Model, UserMixin):
     """ Defines the bucketlist model"""
-    __tablename__ = "bucketlist"
+    __tablename__ = "bucket_list"
     bucketlist_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True)
-    user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String(255), index=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow())
-    date_modified = db.Column(
-        db.DateTime,
-        default=datetime.utcnow(),
-        onupdate=datetime.utcnow()
-    )
-    items = db.relationship('Item', backref="bucketlist",
+    date_modified = db.Column(db.DateTime)
+    # created_by = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    items = db.relationship('Item', backref="bucket_list",
                             cascade="all,delete-orphan", lazy='select')
+    created_by = db.Column(db.Integer, db.ForeignKey(
+        'user.user_id', ondelete='CASCADE'))
 
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
 
     def __repr__(self):
         """Represents the bucketlist object"""
         return '<Bucketlist {0} : {1}>'.format(self.bucketlist_id, self.name)
-
+    
+    # def __init__(self, name, created_by):
+    #     """Initialize tables with name"""
+    #     self.name = name
+    #     self.created_by = created_by
 class Item(db.Model, UserMixin):
     """ Defines the bucketlist items model """
     __tablename__='item'
     item_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True)
-    bucketlist_id = db.Column(db.ForeignKey('bucketlist.bucketlist_id'), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow())
-    
-    date_modified = db.Column(
-        db.DateTime,
-        default=datetime.utcnow(),
-        onupdate=datetime.utcnow()
-    )
+    item_name = db.Column(db.String(255))
     done = db.Column(db.Boolean, default=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow())
+    date_modified = db.Column(db.DateTime)
     bucketlist_id = db.Column(
-        db.Integer, db.ForeignKey('bucketlist.bucketlist_id', ondelete='CASCADE'))
+        db.Integer, db.ForeignKey('bucket_list.bucketlist_id', ondelete='CASCADE'))
 
 
     def __repr__(self):

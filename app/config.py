@@ -1,4 +1,6 @@
 import os
+from datetime import timedelta
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -7,6 +9,9 @@ class Config(object):
     DEBUG = False
     SECRET_KEY = "\xe6Ff\xbdNB\x0eW\xa8Dtl+l\xf1U\xf5\x15A\xa3\xe1<\x14\x8d"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    JWT_DEFAULT_REALM = 'Login Required'
+    JWT_EXPIRATION_DELTA = timedelta(minutes=3600)
     
 class DevelopmentConfig(Config):
     """Configurations for Development."""

@@ -3,7 +3,7 @@ import json
 import unittest
 from app import create_app
 from app.config import config_by_name 
-from app import db
+from app.models import db
 
 TEST_DB = 'user.db'
 
@@ -24,28 +24,142 @@ class UsersTests(unittest.TestCase):
     # executed after each test
     def tearDown(self):
         pass
+    
+    def test_encode_auth_token(self):
+        user = User(
+            username='testm',
+            password='test'
+        )
+        db.session.add(user)
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+        self.assertTrue(isinstance(auth_token, bytes))
 
-    # tests
-        def test_create_bucketlist(self):
-            headers = self.get_auth_header()
-            bucketlist = {
-                "name": "BucketList1",
-            }
-            response = self.client.post('/bucketlists',
-                                        data=json.dumps(bucketlist),
-                                        headers=headers
-                                        )
-            assert response.status_code == 201
+    def test_decode_auth_token(self):
+        user = User(username='testm',password='test')
+        db.session.add(user)
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+        self.assertTrue(isinstance(auth_token, bytes))
+        self.assertTrue(User.decode_auth_token(auth_token) == 1)
 
+    def test_registration(self):
+        """ Test for user registration """
+        with self.client:
+            response = self.client.post(
+                '/users',
+                data=json.dumps(dict(
+                    username='jom',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Successfully registered.')
+            self.assertTrue(data['auth_token'])
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 201)
 
+    def test_registered_user_login(self):
+        """ Test for login of registered-user login """
+        with self.client:
+            # user registration
+            resp_register = self.client.post(
+                '/users',
+                data=json.dumps(dict(
+                    username='jom',
+                    password='123456'
+                )),
+                content_type='application/json',
+            )
+            data_register = json.loads(resp_register.data.decode())
+            self.assertTrue(data_register['status'] == 'success')
+            self.assertTrue(
+                data_register['message'] == 'Successfully registered.'
+            )
+            self.assertTrue(data_register['auth_token'])
+            self.assertTrue(resp_register.content_type == 'application/json')
+            self.assertEqual(resp_register.status_code, 201)
+            # registered user login
+            response = self.client.post(
+                '/auth/login',
+                data=json.dumps(dict(
+                    username='jom',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Successfully logged in.')
+            self.assertTrue(data['auth_token'])
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)
 
+    def test_registered_with_already_registered_user(self):
+        """ Test registration with already registered email"""
+        user = User(
+            username='jom',
+            password='test'
+        )
+        db.session.add(user)
+        db.session.commit()
+        with self.client:
+            response = self.client.post(
+                '/users',
+                data=json.dumps(dict(
+                    username='jom',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(
+                data['message'] == 'User already exists. Please Log in.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 202)
 
+    
+    # # helper methods
+    # def register(self, email, password):
+    #     return self.app.post(
+    #         '/register',
+    #         data=dict(email=email, password=password),
+    #         follow_redirects=True
+    #     )
 
+    # def login(self, email, password):
+    #     return self.app.post(
+    #         '/login',
+    #         data=dict(email=email, password=password),
+    #         follow_redirects=True
+    #     )
+
+    # # tests
+    # # def test_registration(self):
+    # #     """ Test for user registration """
+    # #     with self.client:
+    # #         response = self.client.post(
+    # #             '/auth/register',
+    # #             data=json.dumps(dict(
+    # #                 username='faihuna',
+    # #                 password='123456'
+    # #             )),
+    # #             content_type='application/json'
+    # #         )
+    # #     data = json.loads(response.data.decode())
+    # #     self.assertTrue(data['status'] == 'success')
+    # #     self.assertTrue(data['message'] == 'Successfully registered.')
+    # #     self.assertTrue(data['auth_token'])
+    # #     self.assertTrue(response.content_type == 'application/json')
+    # #     self.assertEqual(response.status_code, 201)
     # def test_valid_user_registration(self):
     #     """Test user provide required details for registration"""
-    #     self.app.get('/register', follow_redirects=True)
+    #     self.app.get('/users/login', follow_redirects=True)
     #     response = self.register('faithngetich188@gmail.com', '123')
-    #     self.assertIn('Thanks for registering!', response.data)
+    #     self.assertIn(response.status_code, 201)
 
     # def test_duplicate_email_user_registration_error(self):
     #     """Test user does not register twice"""
