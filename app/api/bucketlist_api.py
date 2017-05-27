@@ -1,13 +1,11 @@
 # Bucketlist resource
 from flask import Flask
+from app.models import db
 from flask_restful import Api, Resource, fields, reqparse
 from flask_jwt import JWT, jwt_required, current_identity
-from app.models import db
 from app.models.models import User, BucketList, Item
 from flask import request, jsonify, make_response
-
 from app.api.validate import validate_register, validate_bucketlist, validate_item, validate_limit_and_offset
-
 
 
 class AddBucketlistResource(Resource):
@@ -18,10 +16,9 @@ class AddBucketlistResource(Resource):
         json = request.json
         print(json)
         validation = validate_bucketlist(json)
+
         if validation.status:
-            # bucketlist = BucketList(name=json['name'],created_by=user[0].id)
             bucketlist = BucketList(name=json['name'], created_by=current_identity.id)
-            # current_identity.bucketlists.append(bucketlist)
             db.session.add(bucketlist)
             db.session.commit()
             status_code = 201
@@ -60,8 +57,6 @@ class AddBucketlistResource(Resource):
         if offset and limit:
             validation = validate_limit_and_offset(limit, offset)
             if validation.status:
-                # response["bucketlists"] = current_identity.get_bucketlist_as_json(limit, offset)
-                # bucketlists = BucketList.query.filter(BucketList.name.like(query.limit)).filter_by(created_by=current_identity.id.all())
                 bucketlists = paginate(offset, limit)
                 response = {}
                 status_code = 200
@@ -95,23 +90,19 @@ class AddBucketlistResource(Resource):
             response["bucketlists"] = []
             name = name.lower()
             query = "%" + name + "%"
-            
-
             if bucketlists:
                 for bucketlist in bucketlists:
                     response["bucketlists"].append(bucketlist.to_json())
-
                 status_code = 200
-
             else:
                 status_code = 404
                 response["message"] = "No bucketlist found by that name"
         else:
             status_code = 400
-        
         response = jsonify(response)
         response.status_code = status_code
         return response
+
 class GetSingleBucketlistById(Resource):
     decorators =[jwt_required()]
     def get(self, id):
@@ -145,6 +136,7 @@ class GetSingleBucketlistById(Resource):
             "message" : "Bucketlist not found"
         })
         return make_response(response, 404)
+
 class DeleteUpdateBucketList(Resource):
     decorators =[jwt_required()]
     def put(self, bucketlist_id):
@@ -165,13 +157,11 @@ class DeleteUpdateBucketList(Resource):
                 "bucketlists": blist_object
             })
             return make_response(response, 200)
-
         response = jsonify({
             "message" : "Bucketlist not found"
         })
         return make_response(response, 404)        
     
-
     def delete(self, bucketlist_id):
         """Delete a bucketlist item from a bucketlist"""
         user_id = current_identity.id
@@ -198,9 +188,7 @@ class AddItemResource(Resource):
         print(json)
         validation = validate_item(json)
         if validation.status:
-            # bucketlist = BucketList(name=json['name'],created_by=user[0].id)
             bucketlist_item = Item(item_name=json['item_name'], bucketlist_id=bucketlist_id)
-            # current_identity.bucketlists.append(bucketlist)
             db.session.add(bucketlist_item)
             db.session.commit()
             status_code = 201

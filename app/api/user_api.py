@@ -1,11 +1,9 @@
 import json
-from flask import request, jsonify, make_response, abort
 from flask_restful import Resource, reqparse
 from flask.views import MethodView
 from sqlalchemy import exc
 from flask_jwt import JWT, jwt_required, current_identity
-
-
+from flask import request, jsonify, make_response, abort
 from app.models import db
 from ..models import User
 # from .auth import login
@@ -39,12 +37,3 @@ class RegisterAPI(MethodView):
                 'message': 'User already exists.',
             })
             return make_response(response, 409)
-
-class Hello(MethodView):
-    decorators = [jwt_required()]
-    def get(self):
-        response = jsonify({
-                'message': 'Hello Faith',
-            })
-        return make_response(response, 200)
-        

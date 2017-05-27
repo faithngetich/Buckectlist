@@ -12,11 +12,10 @@ def authenticate(username, password):
     parser.add_argument('username', type=str, required=True, location='json', help="Username Required")
     parser.add_argument('password', type=str, required=True, location='json', help="Password Required")
     args = parser.parse_args()
-
     username = args.get('username')
     password = args.get('password')
-
     user = User(username=username, password=password)
+
     try:
         check_user = User.query.filter_by(username=username).one()
         passwor_hash = check_user.password
@@ -25,18 +24,6 @@ def authenticate(username, password):
         if(verify_password):
             return check_user;
         return None
-        # return make_response(
-        #         jsonify({
-        #             'id':'error',
-        #             'data': {
-        #                 'message': 'Invalid Password'
-        #             }}), 401)
     except NoResultFound:
-        # return make_response(
-        #     jsonify({
-        #         'id':'error',
-        #         'data': {
-        #             'message': 'Invalid Username Password Combination'
-        #         }}), 401)
         return None
             

@@ -1,6 +1,7 @@
 import os
 import json
 import unittest
+import flaskr
 from app import create_app
 from app.config import config_by_name 
 from app.models.models import User, BucketList, Item
@@ -13,7 +14,7 @@ class UsersTests(unittest.TestCase):
     # executed prior to each each test
     def setUp(self):
         app = create_app('test')
-        self.app = app.test_client()
+        # self.app = app.test_client()
         with app.app_context():
             db.drop_all()
             db.create_all()

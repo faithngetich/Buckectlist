@@ -4,7 +4,6 @@ from app.models.models import BucketList, Item
 
 class Validation:
     '''Class for returning validation results'''
-
     def __init__(self):
         self.status = None
         self.message = ""
@@ -24,12 +23,9 @@ def validate_register(json):
         validation.status = False
         validation.message = "The password should be more than 8 characters."
         return validation
-
-    match = re.match(
-        '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',
-        json["username"]
-    )
-
+    # ^ marks the start of the string
+    # $ end of the line
+    match = re.match('^[0-9]{2}-[0-9]{3}$',json["username"])
     if match is None:
         validation.status = False
         validation.message = "username is invalid"

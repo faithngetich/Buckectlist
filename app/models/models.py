@@ -2,11 +2,9 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
-
 from app.config import config
 
 db = SQLAlchemy()
-
 class User(db.Model, UserMixin):
     """Defines the users model"""
     __tablename__ = "user"
@@ -28,7 +26,6 @@ class User(db.Model, UserMixin):
     def get_by_username(username):
         return User.query.filter_by(username=username).first()
 
-    
     @staticmethod
     def decode_auth_token(token):
         """
@@ -75,7 +72,6 @@ class Item(db.Model, UserMixin):
     date_modified = db.Column(db.DateTime)
     bucketlist_id = db.Column(
         db.Integer, db.ForeignKey('bucket_list.bucketlist_id', ondelete='CASCADE'))
-
 
     def __repr__(self):
         """Represents the item object"""
