@@ -3,7 +3,7 @@ from flask import Flask
 from flask_jwt import JWT
 
 from .config import config_by_name
-from .auth import identity, authenticate, login
+from .auth import identity, authenticate
 from app.models import db
 
 jwt = JWT()

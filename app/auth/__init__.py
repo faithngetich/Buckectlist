@@ -1,17 +1,42 @@
 from app.models import User
-
-def login(username, password):
-    user = User.query.filter_by(username=username).first()
-    if user and user.verify_password(password):
-        return user
-    return False
+from flask_restful import Resource, reqparse
+from sqlalchemy.orm.exc import NoResultFound
+from flask import request, jsonify, make_response
 
 def identity(payload):
-    user_id = payload['identity']
-    return User.query.filter(user_id == user_id).first()
+    username = payload['identity']
+    return User.query.filter_by(id = username).first()
 
 def authenticate(username, password):
-    user = User.query.filter_by(username=username).first()
-    if user is not None and user.verify_password(password):
-        return user
-    return False
+    parser = reqparse.RequestParser()
+    parser.add_argument('username', type=str, required=True, location='json', help="Username Required")
+    parser.add_argument('password', type=str, required=True, location='json', help="Password Required")
+    args = parser.parse_args()
+
+    username = args.get('username')
+    password = args.get('password')
+
+    user = User(username=username, password=password)
+    try:
+        check_user = User.query.filter_by(username=username).one()
+        passwor_hash = check_user.password
+        verify_password = user.verify_password(passwor_hash, password)
+        print('Here>>>>>', verify_password)
+        if(verify_password):
+            return check_user;
+        return None
+        # return make_response(
+        #         jsonify({
+        #             'id':'error',
+        #             'data': {
+        #                 'message': 'Invalid Password'
+        #             }}), 401)
+    except NoResultFound:
+        # return make_response(
+        #     jsonify({
+        #         'id':'error',
+        #         'data': {
+        #             'message': 'Invalid Username Password Combination'
+        #         }}), 401)
+        return None
+            

@@ -10,6 +10,7 @@ class Config(object):
     SECRET_KEY = "\xe6Ff\xbdNB\x0eW\xa8Dtl+l\xf1U\xf5\x15A\xa3\xe1<\x14\x8d"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    JWT_AUTH_URL_RULE = "/api/login"
     JWT_DEFAULT_REALM = 'Login Required'
     JWT_EXPIRATION_DELTA = timedelta(minutes=3600)
     

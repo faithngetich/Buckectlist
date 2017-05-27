@@ -2,7 +2,6 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
-import jwt
 
 from app.config import config
 
@@ -11,45 +10,24 @@ db = SQLAlchemy()
 class User(db.Model, UserMixin):
     """Defines the users model"""
     __tablename__ = "user"
-    user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255))
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow())
     bucketlists = db.relationship('BucketList', backref="user",
                                   cascade="all,delete-orphan", lazy='dynamic')
 
-    @property
-    def password(self):
-        raise AttributeError('password: write-only field')
+    def hash_password(self):
+        self.password = generate_password_hash(self.password)
 
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password):
+    def verify_password(self, password_hash, password):
         # return check_password_hash(self.password_hash, password)
-        return check_password_hash(generate_password_hash(password), password)
+        return check_password_hash(password_hash, password)
 
     @staticmethod
     def get_by_username(username):
         return User.query.filter_by(username=username).first()
 
-    def encode_auth_token(self, user_id):
-        """
-        Generates the Auth Token
-        :return: string
-        """
-        
-        payload = {
-            'exp':datetime.utcnow() + timedelta(days=0, seconds=3600),
-            'iat':datetime.utcnow(),
-            'sub': id
-        }
-        return jwt.encode(
-            payload,
-            config['SECRET'], 
-            algorithm='HS256'
-        )
     
     @staticmethod
     def decode_auth_token(token):
@@ -80,17 +58,13 @@ class BucketList(db.Model, UserMixin):
     items = db.relationship('Item', backref="bucket_list",
                             cascade="all,delete-orphan", lazy='select')
     created_by = db.Column(db.Integer, db.ForeignKey(
-        'user.user_id', ondelete='CASCADE'))
+        'user.id', ondelete='CASCADE'))
 
 
     def __repr__(self):
         """Represents the bucketlist object"""
         return '<Bucketlist {0} : {1}>'.format(self.bucketlist_id, self.name)
     
-    # def __init__(self, name, created_by):
-    #     """Initialize tables with name"""
-    #     self.name = name
-    #     self.created_by = created_by
 class Item(db.Model, UserMixin):
     """ Defines the bucketlist items model """
     __tablename__='item'
@@ -105,4 +79,4 @@ class Item(db.Model, UserMixin):
 
     def __repr__(self):
         """Represents the item object"""
-        return '<Item {0} : {1}>'.format(self.item_id, self.name)
+        return '<Item {0} : {1}>'.format(self.item_id, self.item_name)

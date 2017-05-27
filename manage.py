@@ -15,8 +15,9 @@ manager.add_command('db', MigrateCommand)
 def create_db(name):
     """Creates database with tables"""
     os.system('createdb {}'.format(name))
+    # app.config['SQL'] = whatever name you want
     db.create_all()
-    db.session.commit()
+    # db.session.commit()
     print("{} has been successfully created.".format(name))
 
 @manager.command
@@ -24,7 +25,7 @@ def drop_db(name):
     """Deletes a database"""
     os.system('dropdb {}'.format(name))
     db.drop_all()
-    db.session.commit()
+    # db.session.commit()
     print("{} has been deleted.".format(name))
 
 if __name__ == '__main__':

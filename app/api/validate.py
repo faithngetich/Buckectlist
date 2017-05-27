@@ -1,5 +1,5 @@
 import re
-from app.models.models import BucketList
+from app.models.models import BucketList, Item
 
 
 class Validation:
@@ -72,36 +72,55 @@ def validate_bucketlist(json):
 def validate_item(json):
     validation = Validation()
     try:
-        if 'name' not in json and 'done' not in json:
-            validation.status = False
-            validation.message = "Invalid data."
-            return validation
-        if 'name' in json and not len(json['name']) > 0:
+        if not len(json['item_name']):
             validation.status = False
             validation.message = "The item name is too short."
-        elif 'done' in json and not json['done'] in ['true', 'false']:
-            validation.status = False
-            validation.message = "The item completion status should be either 'true' or 'false'."
+            return validation
         else:
-            validation.status = True
-            validation.message = "Item successfully created!"
-        return validation
+            item = Item.query.filter_by(item_name=json['item_name']).first()
+            if item:
+                validation.status = False
+                validation.message = "Item already exists"
+                return validation
+            else:              
+                validation.status = True
+                validation.message = "Item successfully created!"
+                return validation
     except KeyError:
         validation.status = False
-        validation.message = "You did not include the item name."
+        validation.message = "You did not include an Item name."
         return validation
+            
+    #     if json.item_name:
+    #         validation.status = False
+    #         validation.message = "Invalid data."
+    #         return validation
+    #     if 'name' in json and not len(json['name']) > 0:
+    #         validation.status = False
+    #         validation.message = "The item name is too short."
+    #     elif 'done' in json and not json['done'] in ['true', 'false']:
+    #         validation.status = False
+    #         validation.message = "The item completion status should be either 'true' or 'false'."
+    #     else:
+    #         validation.status = True
+    #         validation.message = "Item successfully created!"
+    #     return validation
+    # except KeyError:
+    #     validation.status = False
+    #     validation.message = "You did not include the item name."
+    #     return validation
 
 
 def validate_limit_and_offset(limit='20', offset=100):
     validation = Validation()
     try:
-        if limit > offset:
-            validation.status = False
-        elif limit < 1:
-            validation.status = False
-        else:
-            limit = int(limit)
-            validation.status = True
+        limit = int(limit)
+        offset = int(offset)
     except ValueError:
         validation.status = False
+    if limit > offset:
+        validation.status = False
+    elif limit < 1:
+        validation.status = False
+    validation.status = True
     return validation
