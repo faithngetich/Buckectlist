@@ -9,7 +9,7 @@ from ..models import User
 # from .auth import login
 
 
-class RegisterAPI(MethodView):
+class UserAPI(MethodView):
     """User Registration Resource"""
     def post(self):
         # get the post data
@@ -21,6 +21,15 @@ class RegisterAPI(MethodView):
         username = args.get('username');
         password = args.get('password');
 
+        if username=="" or password=="":
+            response = jsonify({
+                'status': 'failed',
+                'Error': 'Empty username or password',
+                'message': 'please enter username or password.',
+            })
+            return make_response(response, 400) # 409 => duplicate resources
+            
+            
         user = User(username=username, password=password);
         user.hash_password()
         db.session.add(user)
