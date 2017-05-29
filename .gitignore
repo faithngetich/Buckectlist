@@ -29,7 +29,7 @@ var/
 /instance/flask_full.cfg
 /instance/*.db
 
-/migrations
+
 # ignore db
 /app/*.db
 
