@@ -25,10 +25,11 @@ class AddBucketlistResource(Resource):
         else:
             status_code = 400
 
-        response["message"] = validation.message
-        response = jsonify(response)
-        response.status_code = status_code
-        return response
+        response = jsonify({
+            'message': validation.message
+        })
+
+        return make_response(response, status_code)
     
     def get(self):
         '''List all created bucketlist by name'''
@@ -55,6 +56,15 @@ class AddBucketlistResource(Resource):
             return make_response(response, 200)
 
         if offset and limit:
+            try:
+                limit = int(limit)
+                offset = int(limit)
+            except:
+                result = jsonify({
+                    'message': 'Offset or limit are not integers'
+                })
+                return make_response(result) # test
+
             validation = validate_limit_and_offset(limit, offset)
             if validation.status:
                 bucketlists = paginate(offset, limit)
@@ -133,7 +143,7 @@ class GetSingleBucketlistById(Resource):
             })
             return make_response(response, 200)
         response = jsonify({
-            "message" : "Bucketlist not found"
+            "message" : "Bucketlist not found" # test
         })
         return make_response(response, 404)
 
@@ -178,7 +188,7 @@ class DeleteUpdateBucketList(Resource):
         response = jsonify({
             "message" : "Bucketlist not found"
         })
-        return make_response(response, 404)        
+        return make_response(response, 404) # test   
 class AddItemResource(Resource):
     decorators =[jwt_required()]
     def post(self, bucketlist_id):
@@ -198,7 +208,7 @@ class AddItemResource(Resource):
         response["message"] = validation.message
         response = jsonify(response)
         response.status_code = status_code
-        return response
+        return response #test for create new item in nonexistant bucket
 
 class DeleteUpdateItem(Resource):
     decorators =[jwt_required()]
@@ -228,7 +238,7 @@ class DeleteUpdateItem(Resource):
             "message" : "Item not found"
         })
         return make_response(response, 404) 
-    def delete_item_from_bucketlist(self, bucketlist_id, item_id):
+    def delete(self, bucketlist_id, item_id):
         '''Delete bucketlist item from a bucketlist'''
         user_id = current_identity.id
         item = BucketList.query.filter_by(created_by=current_identity.id).filter_by(bucketlist_id=bucketlist_id).first()

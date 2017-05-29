@@ -7,7 +7,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     '''Parent configuration class general settings that we want all environments to have by default. '''
     DEBUG = False
-    SECRET_KEY = "\xe6Ff\xbdNB\x0eW\xa8Dtl+l\xf1U\xf5\x15A\xa3\xe1<\x14\x8d"
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    print(SECRET_KEY)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     JWT_AUTH_URL_RULE = "/api/login"

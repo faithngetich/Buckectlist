@@ -27,13 +27,15 @@ class RegisterAPI(MethodView):
         try:
             db.session.commit()
             response = jsonify({
+                'status': 'success',
                 'user': {'username': username},
                 'message': 'User created successfully',
             })
             return make_response(response, 201)
         except exc.IntegrityError:
             response = jsonify({
+                'status': 'failed',
                 'Error': 'Duplicate Username',
-                'message': 'User already exists.',
+                'message': 'User already exists. Please Log in.',
             })
-            return make_response(response, 409)
+            return make_response(response, 409) # 409 => duplicate resources

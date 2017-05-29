@@ -32,7 +32,7 @@ def validate_register(json):
         return validation
 
     validation.status = True
-    validation.status = "User successfully registered."
+    validation.message = "User successfully registered."
     return validation
 
 
@@ -60,10 +60,7 @@ def validate_bucketlist(json):
         validation.status = False
         validation.message = "You did not include a bucketlist name."
         return validation
-    # else:
-    #     validation.status = False
-    #     validation.message = "Bucketlist already exists"
-    #     return validation
+    
 
 def validate_item(json):
     validation = Validation()
@@ -86,26 +83,6 @@ def validate_item(json):
         validation.status = False
         validation.message = "You did not include an Item name."
         return validation
-            
-    #     if json.item_name:
-    #         validation.status = False
-    #         validation.message = "Invalid data."
-    #         return validation
-    #     if 'name' in json and not len(json['name']) > 0:
-    #         validation.status = False
-    #         validation.message = "The item name is too short."
-    #     elif 'done' in json and not json['done'] in ['true', 'false']:
-    #         validation.status = False
-    #         validation.message = "The item completion status should be either 'true' or 'false'."
-    #     else:
-    #         validation.status = True
-    #         validation.message = "Item successfully created!"
-    #     return validation
-    # except KeyError:
-    #     validation.status = False
-    #     validation.message = "You did not include the item name."
-    #     return validation
-
 
 def validate_limit_and_offset(limit='20', offset=100):
     validation = Validation()

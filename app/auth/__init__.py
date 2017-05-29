@@ -20,10 +20,8 @@ def authenticate(username, password):
         check_user = User.query.filter_by(username=username).one()
         passwor_hash = check_user.password
         verify_password = user.verify_password(passwor_hash, password)
-        print('Here>>>>>', verify_password)
         if(verify_password):
             return check_user;
         return None
     except NoResultFound:
         return None
-            
