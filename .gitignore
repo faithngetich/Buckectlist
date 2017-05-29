@@ -29,6 +29,10 @@ var/
 /instance/flask_full.cfg
 /instance/*.db
 
+# ignore db
+*.db
+
+
 # PyCharm files
 .idea/
 
@@ -59,6 +63,8 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+/coverage_html
+/htmlcov
 *,cover
 .hypothesis/
 
@@ -94,6 +100,9 @@ celerybeat-schedule
 
 # dotenv
 .env
+
+# pyc
+.pyc
 
 # virtualenv
 venv/
