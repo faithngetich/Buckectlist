@@ -1,0 +1,338 @@
+FORMAT: 1A
+HOST: https://dede-bucketlist.herokuapp.com
+
+# Before I Die
+
+*Before I Die* is an API that lets you manage bucketlists.
+
+
+## Register [/api/v1/auth/register]
+
+### Create a new user  [POST]
+
+Unregistered users must sign up to use the service. They sign up with first_name, last_name, email and password. Additionally, the password must be confirmed.
+
++ Request (application/json)
+
+    + Body
+
+            {
+            "username": "Dede",
+            "password": "0712235735"
+            }
+
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+             "message": "User created and logged in"
+            }
+
+
+### Login [/auth/login]
+Registered users must be logged in to use the service. All endpoints except for **register** and **login** require that the user is logged in.
+
+### Authenticate a user and generate an authorization token  [POST]
+
+Before a user can make requests to the API, one must be logged in. The login action responds with an authorization token that will be used to authenticate subsequent requests. For a successful login the following parameters must be provided: `email` and `password`.
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "username": "<username>"
+                "password": "<password>"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Successfully logged in",
+                "authorization_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2LCJleHAiOjE0ODA3NjgxMTR9.T2bpTIbMLLqBNT1k_j098H3fu4PhD4fp71ukx9EGCi0"
+            }
+
+## Bucketlist Collection [/api/v1/bucketlists/]
+
+### Create a new bucketlist  [POST]
+
+Users can create new bucketlists by supplying a 'name' parameter. The server responds then with the created bucketlist.
++ Request (application/json)
+
+    + Body
+
+            {
+               "name": "Read the whole bible"
+            }
+
+    + Headers
+
+            Authorization: <authorization token>
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": 1,
+                "name": "Read the whole bible",
+                "items": [],
+                "date_created": "2016-12-02 12:52:52",
+                "date_modified": "2016-12-02 12:52:52",
+                "created_by": 1
+            }
+
+### List all bucketlists  [GET]
+Lists all the bucketlists, with or without the following options:
+- page - the page to the results.
+- limit - the number of results to be returned. Maximum is 100. Default is 20
+- q - the query.
+
++ Request (application/json)
+
+    + Headers
+
+                Authorization: <authorization token>
+
++ Parameters
+    + page(optional, int)
+        + Default: 1
+    + limit(optional, int) the number of results to be displayed
+        + Default: 20
+    + q(optional, string) the query string
+        + Default: ""
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                "id": 1,
+                "name": "Read the whole bible",
+                "items": [
+                  {
+                    "id": 1,
+                    "name": "Revelations",
+                    "date_created": "2016-12-02 12:52:52",
+                    "date_modified": "2016-12-02 12:52:52",
+                    "done": false
+                  }
+                ],
+                "date_created": "2016-12-02 12:52:52",
+                "date_modified": "2016-12-02 12:52:52",
+                "created_by": 1
+              },
+
+              {
+                "id": 2,
+                "name": "Travel the world",
+                "items": [],
+                "date_created": "2016-12-02 12:52:52",
+                "date_modified": "2016-12-02 12:52:52",
+                "created_by": 1
+              }
+            ]
+
+## Bucketlist Record [/api/v1/bucketlists/<id>]
+
+### Retrieve a specific bucketlist   [GET]
+
+Retrieve a bucketlist based on the given `id`.
+
++ Request 200 (application/json)
+    + Headers
+
+            Authorization: <authorization token>
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                  "id": 1,
+                  "name": "IMDB Top 250",
+                  "items": [
+                    {
+                      "id": 3,
+                      "name": "Revelation",
+                      "date_created": "2016-12-02 12:52:52",
+                      "date_modified": "2016-12-02 12:52:52",
+                      "done": false
+                    }
+                  ],
+                  "date_created": "2016-12-02 12:52:52",
+                  "date_modified": "2016-12-02 12:52:52",
+            }
+
+### Update a bucketlist  [PUT]
+Update the attributes of a given bucket list
++ Request 200 (application/json)
+    + Headers
+
+            Authorization: <authorization token>
+
+    + Body
+
+            {
+                "name": "New Name"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": 1,
+              "name": "New Name",
+              "items": [
+                {
+                  "id": 3,
+                  "name": "Revelation",
+                  "date_created": "2016-12-02 12:52:52",
+                  "date_modified": "2016-12-02 12:52:52",
+                  "done": false
+                }
+              ],
+              "date_created": "2016-12-02 12:52:52",
+              "date_modified": "2016-12-02 12:52:52",
+            }
+
+### Delete a bucketlist  [DELETE]
+
+This deletes a given bucketlist
+
++ Request 200 (application/json)
+    + Headers
+
+            Authorization: <authorization token>
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Bucketlist successfully deleted"
+            }
+## Item Collection [/api/v1/bucketlists/<id>/items/]
+
+### Create a new Item  [POST]
+
+A user can create a new item in any of the bucketlists.
+
++ Request (application/json)
+    + Headers
+
+            Authorization: <authorization token>
+
+    + Body
+
+            {
+                "name": "Revelation"
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+              "id": 5,
+              "name": "Revelation",
+              "date_created": "2016-12-02 12:52:52",
+              "date_modified": "2016-12-02 12:52:52",
+              "done": false
+            }
+
+### List all Items in a bucketlist  [GET]
++ Request (application/json)
+    + Headers
+
+            Authorization: <authorization token>
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                [
+                  {
+                    "id": 4,
+                    "name": "Revelation 1",
+                    "date_created": "2016-12-02 12:52:52",
+                    "date_modified": "2016-12-02 12:52:52",
+                    "done": false
+                  },
+                  {
+                    "id": 5,
+                    "name": "Revelation 2",
+                    "date_created": "2016-12-02 12:52:52",
+                    "date_modified": "2016-12-02 12:52:52",
+                    "done": false
+                  }
+                ]
+            }
+
+## Item Record [/api/v1/bucketlists/<id>/items/<id>]
+
+### Retrieve a single item from a bucketlist  [GET]
++ Request (application/json)
+    + Headers
+
+            Authorization: <authorization token>
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "id": 5,
+              "name": "Revelation",
+              "date_created": "2016-12-02 12:52:52",
+              "date_modified": "2016-12-02 12:52:52",
+              "done": false
+            }
+
+### Update an item  [PUT]
+To update an item, supply a 'name' or 'done' attribute that will update the resource
++ Request (application/json)
+    + Headers
+
+            Authorization: <authorization token>
+
+    + Body
+
+            {
+                "done": true
+            }
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                  "id": 5,
+                  "name": "Revelation",
+                  "date_created": "2016-12-02 12:52:52",
+                  "date_modified": "2016-12-02 12:52:52",
+                  "done": true
+            }
+
+
+
+### Delete an item  [DELETE]
+You can delete an item from the bucketlist by specifying an id
++ Request (application/json)
+    + Headers
+
+            Authorization: <authorization token>
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+              "message": "List successfully deleted"
+            }
