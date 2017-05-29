@@ -25,6 +25,3 @@ def authenticate(username, password):
         return None
     except NoResultFound:
         return None
-
-
-# implement OOP and move this file

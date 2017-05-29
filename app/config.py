@@ -8,7 +8,6 @@ class Config(object):
     '''Parent configuration class general settings that we want all environments to have by default. '''
     DEBUG = False
     SECRET_KEY = os.getenv("SECRET_KEY")
-    print(SECRET_KEY)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     JWT_AUTH_URL_RULE = "/api/login"
