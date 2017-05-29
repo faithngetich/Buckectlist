@@ -35,14 +35,28 @@ class AddBucketlistResource(Resource):
         '''List all created bucketlist by name'''
         response = {}
         query = request.args.get('q', None) # search string
-        limit = request.args.get('limit', None)
+        limit = request.args.get('limit')
         offset = request.args.get('offset', None)
+        q = request.args.get('q')
+        page = request.args.get('page')
+    
+        this_page = 0
+        current_limit = 0
 
-        if not (offset or limit):
-            bucketlists = BucketList.query.filter_by(created_by=current_identity.id).all()
-            print(bucketlists)
+        if page:
+            this_page = int(page)
+        else:
+            this_page = 1
+
+        if limit:
+            current_limit = int(limit)
+        else:
+            current_limit = 20
+            
+            bucketlist =  BucketList.query.filter(BucketList.name.like(
+                       '%{}%'.format(q))).filter_by(created_by=current_identity.id).paginate(page=this_page,per_page=current_limit, error_out=True)
             blists = []
-            for blist in bucketlists:
+            for blist in bucketlist.items:
                 blist_object = {
                     "id": blist.bucketlist_id,
                     "name": blist.name,
@@ -55,63 +69,21 @@ class AddBucketlistResource(Resource):
             })
             return make_response(response, 200)
 
-        if offset and limit:
-            try:
-                limit = int(limit)
-                offset = int(limit)
-            except:
-                result = jsonify({
-                    'message': 'Offset or limit are not integers'
-                })
-                return make_response(result) # test
-
-            validation = validate_limit_and_offset(limit, offset)
-            if validation.status:
-                bucketlists = paginate(offset, limit)
-                response = {}
-                status_code = 200
-                response["bucketlist"] = bucketlists
-                response['status'] = status_code
-
-                if len(response["bucketlist"]) < 1:
-                    status_code = 404
-                    response["message"] = "no bucketlist exists"
-                    response['status'] = status_code
-                    
-                blists = []
-                for blist in bucketlists:
-                    blist_object = {
-                        "id": blist.bucketlist_id,
-                        "name": blist.name,
-                        "date_created": blist.date_created,
-                        "date_modified": blist.date_modified
-                    }
-                    blists.append(blist_object);
-                response = jsonify({
-                    "bucketlists": blists
-                })
-                return make_response(response, 200)
-
-            else:
-                status_code = 400
-                response["message"] = "Invalid format of offset or limit, They should be integers"
-
-        elif query is not None and len(name) > 0: # carry out the search
-            response["bucketlists"] = []
-            name = name.lower()
-            query = "%" + name + "%"
-            if bucketlists:
-                for bucketlist in bucketlists:
-                    response["bucketlists"].append(bucketlist.to_json())
-                status_code = 200
-            else:
-                status_code = 404
-                response["message"] = "No bucketlist found by that name"
-        else:
-            status_code = 400
-        response = jsonify(response)
-        response.status_code = status_code
-        return response
+        bucketlists = BucketList.query.filter_by(created_by=current_identity.id).paginate(page=this_page,per_page=current_limit, error_out=True)
+                
+        blists = []
+        for blist in bucketlists.items:
+            blist_object = {
+                "id": blist.bucketlist_id,
+                "name": blist.name,
+                "date_created": blist.date_created,
+                "date_modified": blist.date_modified
+            }
+            blists.append(blist_object);
+        response = jsonify({
+            "bucketlists": blists
+        })
+        return make_response(response, 200)
 
 class GetSingleBucketlistById(Resource):
     decorators =[jwt_required()]
