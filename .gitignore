@@ -29,8 +29,9 @@ var/
 /instance/flask_full.cfg
 /instance/*.db
 
+/migrations
 # ignore db
-*.db
+/app/*.db
 
 
 # PyCharm files
