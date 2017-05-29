@@ -4,7 +4,7 @@ from app.api import user_api, bucketlist_api
 # USERS
 # POST
 # routes_api.add_resource(user_api.UserAuth, '/auth/login')
-routes_api.add_resource(user_api.RegisterAPI,'/auth/register')
+routes_api.add_resource(user_api.UserAPI,'/auth/register')
 
 # BUCKETLISTS
 # POST & GET of bucketlist
