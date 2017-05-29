@@ -26,10 +26,11 @@ class TestDevelopmentConfig(unittest.TestCase):
 
 
     def test_add_buckectlist(self):
+        # binds the app with the current context
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -50,7 +51,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -62,7 +63,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             self.assertEqual(response.status_code, 201)
 
     def test_cannot_access_resource_if_not_authenticated(self):
-        response = self.client.post('/api/bucketlists',
+        response = self.client.post('/api/v1/bucketlists',
                                     content_type="application/json",)
         self.assertEqual(response.status_code, 401)
 
@@ -70,7 +71,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -91,7 +92,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                 )),
                 headers={"Authorization": "JWT {}".format(token)},
@@ -105,7 +106,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -126,7 +127,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -141,7 +142,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -162,7 +163,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -175,7 +176,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create same sbucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -190,7 +191,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -211,7 +212,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -221,7 +222,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create item
             response = self.client.post(
-                '/api/bucketlists/1/items',
+                '/api/v1/bucketlists/1/items',
                 data=json.dumps(dict(
                     item_name='Trav to ernder'
                 )),
@@ -236,7 +237,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -257,7 +258,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                 )),
                 headers={"Authorization": "JWT {}".format(token)},
@@ -265,7 +266,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             )
             # create tem
             response = self.client.post(
-                '/api/bucketlists/1/items',
+                '/api/v1/bucketlists/1/items',
                 data=json.dumps(dict(
                 )),
                 headers={"Authorization": "JWT {}".format(token)},
@@ -279,7 +280,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -300,7 +301,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name=""
                 )),
@@ -315,7 +316,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -336,7 +337,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name=""
                 )),
@@ -345,7 +346,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             )
             # create item
             response = self.client.post(
-                '/api/bucketlists/1/items',
+                '/api/v1/bucketlists/1/items',
                 data=json.dumps(dict(
                     item_name=""
                 )),
@@ -360,7 +361,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -381,7 +382,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -393,7 +394,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             self.assertEqual(response.status_code, 201)
 
             # request for bucketlists
-            response = self.client.get('/api/bucketlists', 
+            response = self.client.get('/api/v1/bucketlists', 
                 headers={"Authorization": "JWT {}".format(token)},
                 content_type='application/json'
                 )
@@ -403,7 +404,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -424,7 +425,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -436,7 +437,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             self.assertEqual(response.status_code, 201)
 
             # request for bucketlists
-            response = self.client.get('/api/bucketlists/1', 
+            response = self.client.get('/api/v1/bucketlists/1', 
                 headers={"Authorization": "JWT {}".format(token)},
                 content_type='application/json'
                 )
@@ -446,7 +447,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -467,7 +468,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -478,7 +479,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # update bucket
             response = self.client.put(
-                '/api/bucketlists/1',
+                '/api/v1/bucketlists/1',
                 data=json.dumps(dict(
                     name='Travel to wendani'
                 )),
@@ -492,7 +493,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -513,7 +514,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -524,7 +525,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # update bucket
             response = self.client.put(
-                '/api/bucketlists/1',
+                '/api/v1/bucketlists/1',
                 data=json.dumps(dict(
                     name='Travel to wendani'
                 )),
@@ -538,7 +539,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -559,7 +560,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -570,7 +571,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create item
             response = self.client.post(
-                '/api/bucketlists/1/items',
+                '/api/v1/bucketlists/1/items',
                 data=json.dumps(dict(
                     item_name="Read the whole bible"
                 )),
@@ -580,7 +581,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             
             # delete item
             response = self.client.delete(
-                '/api/bucketlists/1/items/1',
+                '/api/v1/bucketlists/1/items/1',
                 headers={"Authorization": "JWT {}".format(token)},
                 content_type='application/json'
             )
@@ -591,7 +592,7 @@ class TestDevelopmentConfig(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -612,7 +613,7 @@ class TestDevelopmentConfig(unittest.TestCase):
 
             # create bucket
             response = self.client.post(
-                '/api/bucketlists',
+                '/api/v1/bucketlists',
                 data=json.dumps(dict(
                     name='Travel to bermuda'
                 )),
@@ -623,7 +624,7 @@ class TestDevelopmentConfig(unittest.TestCase):
             
             # delete buckectlist
             response = self.client.delete(
-                '/api/bucketlists/26',
+                '/api/v1/bucketlists/26',
                 headers={"Authorization": "JWT {}".format(token)},
                 content_type='application/json'
             )

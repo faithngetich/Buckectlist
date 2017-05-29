@@ -12,6 +12,7 @@ class UsersTests(unittest.TestCase):
     """setup and teardown"""
     def setUp(self):
         self.app = create_app('test')
+        # simulates the get/post environment
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
@@ -23,6 +24,7 @@ class UsersTests(unittest.TestCase):
         self.app_context.pop()
 
     def test_add_user(self):
+        # binds the app with the current context
         with self.app.app_context():
             db.session.add(User(username='testr', password='test'))
             db.session.commit()
@@ -31,7 +33,7 @@ class UsersTests(unittest.TestCase):
         """ Test for user registration """
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -48,7 +50,7 @@ class UsersTests(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -73,7 +75,7 @@ class UsersTests(unittest.TestCase):
         with self.client:
             # user register
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -104,7 +106,7 @@ class UsersTests(unittest.TestCase):
         db.session.commit()
         with self.client:
             response = self.client.post(
-               '/api/auth/register',
+               '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='jom',
                     password='123456'
@@ -123,7 +125,7 @@ class UsersTests(unittest.TestCase):
         """Test user provide all required details"""
         with self.client:
             response = self.client.post(
-                '/api/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     password='123456'
                 )),
