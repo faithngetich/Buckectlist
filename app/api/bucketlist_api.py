@@ -99,10 +99,10 @@ class GetBucketlistItemResource(Resource):
         response = {}
 
 
-        items = Item.query.filter_by(buckectlistbucketlist_id=item_id)
+        items = Item.query.filter_by(bucketlist_id=item_id)
 
         blists = []
-        for blist in items:
+        for item in items:
             blist_object = {
                  "item_id": item.item_id,
                 "done": item.done,
