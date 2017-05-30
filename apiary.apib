@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://dede-bucketlist.herokuapp.com
+HOST: https://dede-buckectlist.herokuapp.com
 
 # Before I Die
 
@@ -17,7 +17,7 @@ Unregistered users must sign up to use the service. They sign up with first_name
     + Body
 
             {
-            "username": "Dede",
+            "username": "Dee",
             "password": "0712235735"
             }
 
@@ -56,7 +56,7 @@ Before a user can make requests to the API, one must be logged in. The login act
                 "authorization_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2LCJleHAiOjE0ODA3NjgxMTR9.T2bpTIbMLLqBNT1k_j098H3fu4PhD4fp71ukx9EGCi0"
             }
 
-## Bucketlist Collection [/api/v1/bucketlists/]
+## Bucketlist Collection [/api/v1/bucketlists]
 
 ### Create a new bucketlist  [POST]
 
@@ -78,17 +78,20 @@ Users can create new bucketlists by supplying a 'name' parameter. The server res
     + Body
 
             {
-                "id": 1,
-                "name": "Read the whole bible",
-                "items": [],
-                "date_created": "2016-12-02 12:52:52",
-                "date_modified": "2016-12-02 12:52:52",
-                "created_by": 1
+              "bucketlists": [
+                {
+                  "date_created": "Tue, 30 May 2017 09:13:00 GMT",
+                  "date_modified": "Tue, 30 May 2017 09:13:00 GMT",
+                  "id": 1,
+                  "name": "Read the whole bible"
+                }
+              ]
             }
 
 ### List all bucketlists  [GET]
 Lists all the bucketlists, with or without the following options:
 - page - the page to the results.
+- offset - the start of search
 - limit - the number of results to be returned. Maximum is 100. Default is 20
 - q - the query.
 
@@ -110,33 +113,22 @@ Lists all the bucketlists, with or without the following options:
 
     + Body
 
-            [
+            {
+              "bucketlists": [
                 {
-                "id": 1,
-                "name": "Read the whole bible",
-                "items": [
-                  {
-                    "id": 1,
-                    "name": "Revelations",
-                    "date_created": "2016-12-02 12:52:52",
-                    "date_modified": "2016-12-02 12:52:52",
-                    "done": false
-                  }
-                ],
-                "date_created": "2016-12-02 12:52:52",
-                "date_modified": "2016-12-02 12:52:52",
-                "created_by": 1
-              },
-
-              {
-                "id": 2,
-                "name": "Travel the world",
-                "items": [],
-                "date_created": "2016-12-02 12:52:52",
-                "date_modified": "2016-12-02 12:52:52",
-                "created_by": 1
-              }
-            ]
+                  "date_created": "Tue, 30 May 2017 09:13:00 GMT",
+                  "date_modified": "Tue, 30 May 2017 09:13:00 GMT",
+                  "id": 1,
+                  "name": "dee"
+                },
+                {
+                  "date_created": "Tue, 30 May 2017 09:13:00 GMT",
+                  "date_modified": "Tue, 30 May 2017 09:13:00 GMT",
+                  "id": 2,
+                  "name": "menon"
+                }
+              ]
+            }
 
 ## Bucketlist Record [/api/v1/bucketlists/<id>]
 
@@ -154,19 +146,13 @@ Retrieve a bucketlist based on the given `id`.
     + Body
 
             {
-                  "id": 1,
-                  "name": "IMDB Top 250",
-                  "items": [
-                    {
-                      "id": 3,
-                      "name": "Revelation",
-                      "date_created": "2016-12-02 12:52:52",
-                      "date_modified": "2016-12-02 12:52:52",
-                      "done": false
-                    }
-                  ],
-                  "date_created": "2016-12-02 12:52:52",
-                  "date_modified": "2016-12-02 12:52:52",
+              "bucketlists": {
+                "date_created": "Tue, 30 May 2017 09:13:00 GMT",
+                "date_modified": "Tue, 30 May 2017 09:13:00 GMT",
+                "id": 1,
+                "items": [],
+                "name": "dee"
+              }
             }
 
 ### Update a bucketlist  [PUT]
@@ -187,19 +173,12 @@ Update the attributes of a given bucket list
     + Body
 
             {
-              "id": 1,
-              "name": "New Name",
-              "items": [
-                {
-                  "id": 3,
-                  "name": "Revelation",
-                  "date_created": "2016-12-02 12:52:52",
-                  "date_modified": "2016-12-02 12:52:52",
-                  "done": false
-                }
-              ],
-              "date_created": "2016-12-02 12:52:52",
-              "date_modified": "2016-12-02 12:52:52",
+              "bucketlists": {
+                "date_created": "Tue, 30 May 2017 09:13:00 GMT",
+                "date_modified": "Tue, 30 May 2017 09:13:00 GMT",
+                "id": 1,
+                "name": "menon today"
+              }
             }
 
 ### Delete a bucketlist  [DELETE]
@@ -216,7 +195,7 @@ This deletes a given bucketlist
     + Body
 
             {
-                "message": "Bucketlist successfully deleted"
+              "bucketlist": "Bucketlist deleted successfully"
             }
 ## Item Collection [/api/v1/bucketlists/<id>/items/]
 
@@ -232,7 +211,7 @@ A user can create a new item in any of the bucketlists.
     + Body
 
             {
-                "name": "Revelation"
+                "item_name": "Revelation"
             }
 
 + Response 201 (application/json)
@@ -240,11 +219,7 @@ A user can create a new item in any of the bucketlists.
     + Body
 
             {
-              "id": 5,
-              "name": "Revelation",
-              "date_created": "2016-12-02 12:52:52",
-              "date_modified": "2016-12-02 12:52:52",
-              "done": false
+              "message": "Item successfully created!"
             }
 
 ### List all Items in a bucketlist  [GET]
@@ -313,11 +288,13 @@ To update an item, supply a 'name' or 'done' attribute that will update the reso
     + Body
 
             {
-                  "id": 5,
-                  "name": "Revelation",
-                  "date_created": "2016-12-02 12:52:52",
-                  "date_modified": "2016-12-02 12:52:52",
-                  "done": true
+              "item": {
+                "date_created": "Tue, 30 May 2017 09:13:00 GMT",
+                "date_modified": "Tue, 30 May 2017 09:13:00 GMT",
+                "done": false,
+                "item_id": 2,
+                "item_name": "menon msa"
+              }
             }
 
 
@@ -334,5 +311,5 @@ You can delete an item from the bucketlist by specifying an id
     + Body
 
             {
-              "message": "List successfully deleted"
+              "item": "Item deleted successfully"
             }
