@@ -37,9 +37,16 @@ To install virtualenvwrapper, we will first install virtualenv
 
   $ deactivate
 
+
+
   cloning the repo
   $ git clone
   
+Change into the app directory by running `cd BucketList`.
+
+After successfully doing this, call `git checkout develop` .
+
+Install the requirements using `pip install -r requirements.txt`.
   Create the .env file in the root folder
 
   $ touch .env
@@ -73,11 +80,7 @@ Create the db
 
   $ python manage.py runserver
 
-Change into the app directory by running `cd BucketList`.
 
-After successfully doing this, call `git checkout develop` .
-
-Install the requirements using `pip install -r requirements.txt`.
 
 
 Deploying to Heroku
