@@ -1,0 +1,8 @@
+[report]
+omit=
+   */python?.?/*
+   *site-packages/*
+   #site-packages/nose/*
+   *models*
+   *app/api/validate.py*
+   */decimal.py
