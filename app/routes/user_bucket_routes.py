@@ -12,6 +12,11 @@ routes_api.add_resource(bucketlist_api.GetSingleBucketlistById, '/bucketlists/<i
 
 # POST bucketlists items
 routes_api.add_resource(bucketlist_api.AddItemResource, '/bucketlists/<int:bucketlist_id>/items')
+
+
+routes_api.add_resource(bucketlist_api.GetBucketlistItemResource, '/bucketlists/<int:bucketlist_id>/items/<int:item_id>')
+
+
 # PUT & DELETE bucketlist and item 
 routes_api.add_resource(bucketlist_api.DeleteUpdateItem, '/bucketlists/<int:bucketlist_id>/items/<int:item_id>')
 routes_api.add_resource(bucketlist_api.DeleteUpdateBucketList, '/bucketlists/<int:bucketlist_id>')

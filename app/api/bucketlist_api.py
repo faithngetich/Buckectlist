@@ -53,10 +53,15 @@ class AddBucketlistResource(Resource):
         else:
             current_limit = 20
             
+            # bucketlist =  BucketList.query.filter(BucketList.name.like(
+            #            '%{}%'.format(q))).filter_by(created_by=current_identity.id).paginate(page=this_page,per_page=current_limit, error_out=True)
+
+        if q:
             bucketlist =  BucketList.query.filter(BucketList.name.like(
                        '%{}%'.format(q))).filter_by(created_by=current_identity.id).paginate(page=this_page,per_page=current_limit, error_out=True)
+                
             blists = []
-            for blist in bucketlist.items:
+            for blist in bucketlists.items:
                 blist_object = {
                     "id": blist.bucketlist_id,
                     "name": blist.name,
@@ -69,10 +74,10 @@ class AddBucketlistResource(Resource):
             })
             return make_response(response, 200)
 
-        bucketlists = BucketList.query.filter_by(created_by=current_identity.id).paginate(page=this_page,per_page=current_limit, error_out=True)
-                
+        bucketlist = BucketList.query.filter_by(created_by=current_identity.id).paginate(page=this_page,per_page=current_limit, error_out=True)
+
         blists = []
-        for blist in bucketlists.items:
+        for blist in bucketlist.items:
             blist_object = {
                 "id": blist.bucketlist_id,
                 "name": blist.name,
@@ -84,6 +89,33 @@ class AddBucketlistResource(Resource):
             "bucketlists": blists
         })
         return make_response(response, 200)
+
+
+class GetBucketlistItemResource(Resource):
+    decorators =[jwt_required()]
+    
+    def get(self, item_id):
+        '''List all created bucketlist by name'''
+        response = {}
+
+
+        items = Item.query.filter_by(buckectlistbucketlist_id=item_id)
+
+        blists = []
+        for blist in items:
+            blist_object = {
+                 "item_id": item.item_id,
+                "done": item.done,
+                "item_name": item.item_name,
+                "date_created": item.date_created,
+                "date_modified": item.date_modified
+            }
+            blists.append(blist_object);
+        response = jsonify({
+            "bucketlists": blists
+        })
+        return make_response(response, 200)
+
 
 class GetSingleBucketlistById(Resource):
     decorators =[jwt_required()]
