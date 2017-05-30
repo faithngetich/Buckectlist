@@ -50,7 +50,7 @@ class BucketList(db.Model, UserMixin):
     bucketlist_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), index=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow())
-    date_modified = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+    date_modified = db.Column(db.DateTime, onupdate=datetime.now)
     # created_by = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     items = db.relationship('Item', backref="bucket_list",
                             cascade="all,delete-orphan", lazy='select')
@@ -69,7 +69,7 @@ class Item(db.Model, UserMixin):
     item_name = db.Column(db.String(255))
     done = db.Column(db.Boolean, default=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow())
-    date_modified = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+    date_modified = db.Column(db.DateTime, onupdate=datetime.now)
     bucketlist_id = db.Column(
         db.Integer, db.ForeignKey('bucket_list.bucketlist_id', ondelete='CASCADE'))
 
