@@ -15,6 +15,7 @@ manager.add_command('db', MigrateCommand)
 def create_db(name):
     """Creates database with tables"""
     os.system('createdb {}'.format(name))
+    app.config['SQL'] = 'dev.db'
     db.create_all()
     print("{} has been successfully created.".format(name))
 
