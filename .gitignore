@@ -27,11 +27,11 @@ var/
 # Instance Folder - used for configuration parameters
 /instance/db_create_full.py
 /instance/flask_full.cfg
-/instance/*.db
+# /instance/*.db
 
 
 # ignore db
-/app/*.db
+# /app/*.db
 
 
 # PyCharm files

@@ -48,3 +48,4 @@ class UserAPI(MethodView):
                 'message': 'User already exists. Please Log in.',
             })
             return make_response(response, 409) # 409 => duplicate resources
+            
