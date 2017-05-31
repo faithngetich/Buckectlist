@@ -94,7 +94,7 @@ class AddBucketlistResource(Resource):
 class GetBucketlistItemResource(Resource):
     decorators =[jwt_required()]
     def get(self, item_id):
-        '''List all created bucketlist by name'''
+        '''List all created bucketlist by name of the item'''
         response = {}
 
 
