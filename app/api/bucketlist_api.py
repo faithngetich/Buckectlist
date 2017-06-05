@@ -52,9 +52,6 @@ class AddBucketlistResource(Resource):
             current_limit = int(limit)
         else:
             current_limit = 20
-            
-            # bucketlist =  BucketList.query.filter(BucketList.name.like(
-            #            '%{}%'.format(q))).filter_by(created_by=current_identity.id).paginate(page=this_page,per_page=current_limit, error_out=True)
 
         if q:
             bucketlist =  BucketList.query.filter(BucketList.name.like(
