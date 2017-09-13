@@ -23,8 +23,6 @@ def validate_register(json):
         validation.status = False
         validation.message = "The password should be more than 8 characters."
         return validation
-    # ^ marks the start of the string
-    # $ end of the line
     match = re.match('^[0-9]{2}-[0-9]{3}$',json["username"])
     if match is None:
         validation.status = False
@@ -53,8 +51,6 @@ def validate_bucketlist(json):
                 validation.status = True
                 validation.message = "Bucketlist successfully created!"
                 return validation
-                # validation.status = True
-                # validation.message = "Bucketlist successfully created!"
             
     except KeyError:
         validation.status = False
