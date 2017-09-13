@@ -6,7 +6,7 @@ from flask_jwt import JWT, jwt_required, current_identity
 from flask import request, jsonify, make_response, abort
 from app.models import db
 from ..models import User
-# from .auth import login
+
 
 
 class UserAPI(MethodView):
